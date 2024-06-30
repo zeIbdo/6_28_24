@@ -1,4 +1,6 @@
-﻿namespace _6_28_24;
+﻿using _6_28_24.Exceptions;
+
+namespace _6_28_24;
 
 public class Library:Base
 {
@@ -11,6 +13,11 @@ public class Library:Base
     }
     public void AddBook(Book book)
     {
+        foreach(var item in books)
+        {
+            if (item.Id == book.Id)
+                throw new BookAlreadyExists("Kitab kitabxanada artiq var");
+        }
         Array.Resize(ref books,books.Length+1);
         books[books.Length-1] = book;
     }

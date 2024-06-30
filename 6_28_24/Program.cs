@@ -1,4 +1,6 @@
-﻿namespace _6_28_24
+﻿using _6_28_24.Exceptions;
+
+namespace _6_28_24
 {
     internal class Program
     {
@@ -67,13 +69,13 @@
                         }
                         if (notFound == true)
                         {
-                            Console.WriteLine("kateqoriya tapilmadi");
+                            throw new CategoryNotFoundException("Kateqoriya tapilmadi");
                             goto Category;
                         }
                     }
                     else
                     {
-                        Console.WriteLine("kateqoriya yoxdur, kitab yaradmadan evvel elave edin");
+                        throw new CategoryNotFoundException("kateqoriya yoxdur, kitab yaradmadan evvel elave edin");
                         goto Restart;
                     }
                     goto Restart;
@@ -87,11 +89,13 @@
                         }
                         Console.WriteLine("id daxil et");
                         int id = int.Parse(Console.ReadLine()) ;
+                        bool notFound=true;
                         foreach(var item in libraries)
                         {
                             if (item.Id == id)
                             {
                                 Library:
+                                notFound = false;
                                 Console.WriteLine("[1]Kitab elave et\n" +
                                     "[2]kitablari goster\n"+
                                     "[0]kitabxanadan cix\n");
@@ -99,7 +103,7 @@
                                 switch (inputLib)
                                 {
                                     default:
-                                        Console.WriteLine("duzgun input daxil et");
+                                        throw new WrongInputException("duzgun input daxil et");
                                         goto Library;
                                     case "1":
                                         Console.WriteLine("Kitablar");
@@ -109,15 +113,14 @@
                                         }
                                         Console.WriteLine("id daxil edin");
                                         int idBook = int.Parse(Console.ReadLine()) ;
-                                        foreach (var kitab in item.books) 
-                                        {
-                                            if (idBook == kitab.Id)
-                                            {
-                                                Console.WriteLine("kitabxanada kitab artiq var");
-                                                goto Library;
-                                            }
-                                            else
-                                            {
+                                        //foreach (var kitab in item.books) 
+                                        //{
+                                            //if (idBook == kitab.Id)
+                                            //{
+                                            //    Console.WriteLine("kitabxanada kitab artiq var");
+                                            //    goto Library;
+                                            //}
+                                            
                                                 foreach (var book in books)
                                                 {
                                                     if (book.Id == idBook)
@@ -129,13 +132,13 @@
 
                                                     else
                                                     {
-                                                        Console.WriteLine("Id tapilmadi");
+                                                        throw new BookNotFoundException("Kitab tapilmadi");
                                                         goto Library;
                                                     }
 
                                                 }
-                                            }
-                                        }
+                                            
+                                       // }
                                         goto Library;
                                         case "2":
                                         item.ListAllBooks();
@@ -143,18 +146,23 @@
                                         
                                 }
                             }
+                            
+                        }
+                        if (notFound == false)
+                        {
+                            throw new LibraryNotFoundException("Kitabxana tapilmadi");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Kitabxana yoxdur, yarad ");
+                        throw new LibraryNotFoundException("Kitabxana yoxdur, yarad ");
                         goto Restart;
                     }
                     break;
                 case "0":
                     return;
                 default:
-                    Console.WriteLine("Duzgun input daxil et");
+                    throw new WrongInputException("Duzgun input daxil et");
                     goto Restart;
             }
         }
